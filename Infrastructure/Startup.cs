@@ -1,7 +1,10 @@
 ﻿using Finbuckle.MultiTenant;
+using Infrastructure.Constants;
 using Infrastructure.Contexts;
+using Infrastructure.Identity.Models;
 using Infrastructure.Tenancy;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +24,36 @@ namespace Infrastructure
                         .WithEFCoreStore<TenantDbContext, ABCSchoolTenantInfo>()
                         .Services
                     .AddDbContext<ApplicationDbContext>(options => options
-                        .UseSqlServer(config.GetConnectionString("DefaultConnection")));
+                        .UseSqlServer(config.GetConnectionString("DefaultConnection")))
+                    .AddTransient<ITenantDbSeeder,TenantDbSeeder>()
+                    .AddTransient<ApplicationDbSeeder>()
+                    .AddIdentityService();
+        }
+
+        internal static IServiceCollection AddIdentityService (this IServiceCollection services)
+        {
+            // Identity services can be added here
+            return services
+                .AddIdentity<ApplicationUser,ApplicationRole>(options =>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequiredLength = 6;
+                    options.User.RequireUniqueEmail = true;
+                }).AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders()
+                .Services;
+        }
+
+        public static async Task InitializeDatabasesAsync(this IServiceProvider serviceProvider, CancellationToken ct = default)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var tenantDbSeeder = scope.ServiceProvider.GetRequiredService<ITenantDbSeeder>();
+                await tenantDbSeeder.InitializeDatabaseAsync(ct);
+            }
         }
 
         public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
