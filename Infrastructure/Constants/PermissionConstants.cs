@@ -62,6 +62,5 @@ namespace Infrastructure.Constants
         public static IReadOnlyList<SchoolPermission> Root ()=> AllPermissions.Where(p => p.IsRoot).ToList();
         public static IReadOnlyList<SchoolPermission> Admin ()=> AllPermissions.Where(p => !p.IsRoot).ToList();
         public static IReadOnlyList<SchoolPermission> Basic ()=> AllPermissions.Where(p => p.IsBasic).ToList();
-        public static IReadOnlyList<SchoolPermission> GetByGroup(string group) => AllPermissions.Where(p => p.Group == group).ToList();
     }
 }
