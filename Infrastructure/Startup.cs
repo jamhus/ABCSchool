@@ -7,6 +7,7 @@ using Infrastructure.Contexts;
 using Infrastructure.Identity.Auth;
 using Infrastructure.Identity.Models;
 using Infrastructure.Identity.Tokens;
+using Infrastructure.OpenApi;
 using Infrastructure.Tenancy;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +19,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 using System.Net;
 using System.Reflection;
 using System.Security.Claims;
@@ -39,13 +42,14 @@ namespace Infrastructure
                         .Services
                     .AddDbContext<ApplicationDbContext>(options => options
                         .UseSqlServer(config.GetConnectionString("DefaultConnection")))
-                    .AddTransient<ITenantDbSeeder,TenantDbSeeder>()
+                    .AddTransient<ITenantDbSeeder, TenantDbSeeder>()
                     .AddTransient<ApplicationDbSeeder>()
                     .AddIdentityService()
-                    .AddPermissions();
+                    .AddPermissions()
+                    .AddOpenApiDocumentation(config);
         }
 
-        internal static IServiceCollection AddIdentityService (this IServiceCollection services)
+        internal static IServiceCollection AddIdentityService(this IServiceCollection services)
         {
             // Identity services can be added here
             return services
@@ -120,7 +124,7 @@ namespace Infrastructure
                     OnChallenge = context =>
                     {
                         context.HandleResponse();
-                        if(!context.Response.HasStarted)
+                        if (!context.Response.HasStarted)
                         {
                             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                             context.Response.ContentType = "application/json";
@@ -154,12 +158,6 @@ namespace Infrastructure
 
             return services;
         }
-
-        public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
-        {
-            return app.UseMultiTenant();
-        }
-
         public static JwtSettings GetJwtSettings(this IServiceCollection services, IConfiguration config)
         {
             var jwtSettingsConfig = config.GetSection(nameof(JwtSettings));
@@ -173,6 +171,66 @@ namespace Infrastructure
             return services
                 .AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
                 .AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        }
+
+        internal static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services, IConfiguration config)
+        {
+            var swaggerSettings = config.GetSection(nameof(SwaggerSettings)).Get<SwaggerSettings>();
+
+            services.AddEndpointsApiExplorer();
+            _ = services.AddOpenApiDocument((document, serviceProvider) =>
+            {
+                document.PostProcess = d =>
+                {
+                    d.Info.Title = swaggerSettings.Title;
+                    d.Info.Description = swaggerSettings.Description;
+                    d.Info.Contact = new OpenApiContact
+                    {
+                        Name = swaggerSettings.ContactName,
+                        Email = swaggerSettings.ContactEmail,
+                        Url = swaggerSettings.ContactUrl
+                    };
+                    d.Info.License = new OpenApiLicense
+                    {
+                        Name = swaggerSettings.LicenseName,
+                        Url = swaggerSettings.LicenseUrl
+                    };
+                };
+
+                document.AddSecurity(JwtBearerDefaults.AuthenticationScheme, Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Description = "Enter your Bearer token to attach it as a header on your requests",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    BearerFormat = "JWT",
+                });
+
+                document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor(JwtBearerDefaults.AuthenticationScheme));
+                document.OperationProcessors.Add(new SwaggerGlobalAuthProcessor());
+                document.OperationProcessors.Add(new SwaggerHeaderAttributeProcessor());
+            });
+            return services;
+        }
+        public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
+        {
+            return app
+                .UseAuthentication()
+                .UseMultiTenant()
+                .UseAuthorization()
+                .UseOpenApiDocumentation();
+        }
+
+        internal static IApplicationBuilder UseOpenApiDocumentation(this IApplicationBuilder app)
+        {
+            app.UseOpenApi();
+            app.UseSwaggerUi(settings =>
+            {
+                settings.DefaultModelExpandDepth = -1;
+                settings.DocExpansion = "none";
+                settings.TagsSorter = "alpha";
+            });
+            return app;
         }
     }
 }

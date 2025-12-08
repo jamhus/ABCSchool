@@ -17,10 +17,6 @@
     <PackageReference Include="Microsoft.OpenApi" Version="1.6.28" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
 
 
 </Project>
