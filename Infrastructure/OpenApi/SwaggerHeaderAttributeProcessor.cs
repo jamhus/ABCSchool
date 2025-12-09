@@ -15,7 +15,7 @@ namespace Infrastructure.OpenApi
                 var parameters = context.OperationDescription.Operation.Parameters;
 
                 var existingParameter = parameters
-                    .FirstOrDefault(p => p.Kind == NSwag.OpenApiParameterKind.Header && p.Name == swaggerHeader.HeaderName);
+                    .FirstOrDefault(p => p.Kind == OpenApiParameterKind.Header && p.Name == swaggerHeader.HeaderName);
 
                 if (existingParameter is not null)
                 {

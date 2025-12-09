@@ -9,7 +9,7 @@ namespace WebApi.Controllers
     public class ValuesController : ControllerBase
     {
         [HttpGet]
-        [ShouldHavePermission(SchoolAction.Read, SchoolFeature.Schools)]
+        [ShouldHavePermission(action:SchoolAction.Read, feature: SchoolFeature.Schools)]
         public IEnumerable<int> Get()
         {
             return [1, 2, 4, 5, 6];

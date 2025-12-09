@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Infrastructure.Identity.Tokens
@@ -129,7 +130,7 @@ namespace Infrastructure.Identity.Tokens
         {
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.TokenExpiryInMinutes),
+                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.TokenExpiryTimeInMinutes),
                 signingCredentials: signingCredentials
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -178,7 +179,7 @@ namespace Infrastructure.Identity.Tokens
         private string generateRefreshToken()
         {
             byte[] randomNumber = new byte[32];
-            using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+            using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(randomNumber);
                 return Convert.ToBase64String(randomNumber);

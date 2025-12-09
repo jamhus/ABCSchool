@@ -60,9 +60,8 @@ namespace Infrastructure.OpenApi
                 }
 
                 if (context.OperationDescription.Operation.Security.Count == 0)
-
                 {
-                    (context.OperationDescription.Operation.Security ??= new List<OpenApiSecurityRequirement>())
+                    (context.OperationDescription.Operation.Security ??= [])
                         .Add(new OpenApiSecurityRequirement
                         {
                             {
@@ -71,7 +70,6 @@ namespace Infrastructure.OpenApi
                             }
                         });
                 }
-
             }
             return true;
         }

@@ -89,36 +89,43 @@ namespace Infrastructure
                 bearer.SaveToken = true;
                 bearer.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidateIssuerSigningKey = true,
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(secret),
-                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero,
                     RoleClaimType = ClaimTypes.Role,
-                    ClockSkew = TimeSpan.Zero
+                    ValidateLifetime = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
                 };
 
                 bearer.Events = new JwtBearerEvents
                 {
                     OnAuthenticationFailed = context =>
                     {
-                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        if (context.Exception is SecurityTokenExpiredException)
                         {
-                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                            context.Response.ContentType = "application/json";
-
-                            var result = JsonConvert.SerializeObject(ResponseWrapper.Fail("Token has expired"));
-
-                            return context.Response.WriteAsync(result);
+                            if (!context.Response.HasStarted)
+                            {
+                                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                                context.Response.ContentType = "application/json";
+                                var result = JsonConvert.SerializeObject(ResponseWrapper.Fail("Token has expired"));
+                                return context.Response.WriteAsync(result);
+                            }
+                            return Task.CompletedTask;
                         }
                         else
                         {
-                            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                            context.Response.ContentType = "application/json";
+                            if(!context.Response.HasStarted)
+                            {
 
-                            var result = JsonConvert.SerializeObject(ResponseWrapper.Fail("Unhandled error has occured"));
+                                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                                context.Response.ContentType = "application/json";
 
-                            return context.Response.WriteAsync(result);
+                                var result = JsonConvert.SerializeObject(ResponseWrapper.Fail("Unhandled error has occured"));
+
+                                return context.Response.WriteAsync(result);
+                            }
+                            return Task.CompletedTask;
                         }
                     },
                     OnChallenge = context =>
@@ -135,10 +142,14 @@ namespace Infrastructure
                     },
                     OnForbidden = context =>
                     {
-                        context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                        context.Response.ContentType = "application/json";
-                        var result = JsonConvert.SerializeObject(ResponseWrapper.Fail("You are not authorized to access this resource"));
-                        return context.Response.WriteAsync(result);
+                        if (!context.Response.HasStarted)
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                            context.Response.ContentType = "application/json";
+                            var result = JsonConvert.SerializeObject(ResponseWrapper.Fail("You are not authorized to access this resource"));
+                            return context.Response.WriteAsync(result);
+                        }
+                        return Task.CompletedTask;
                     }
                 };
             });
@@ -180,33 +191,34 @@ namespace Infrastructure
             services.AddEndpointsApiExplorer();
             _ = services.AddOpenApiDocument((document, serviceProvider) =>
             {
-                document.PostProcess = d =>
+                document.PostProcess = doc =>
                 {
-                    d.Info.Title = swaggerSettings.Title;
-                    d.Info.Description = swaggerSettings.Description;
-                    d.Info.Contact = new OpenApiContact
+                    doc.Info.Title = swaggerSettings.Title;
+                    doc.Info.Description = swaggerSettings.Description;
+                    doc.Info.Contact = new OpenApiContact
                     {
                         Name = swaggerSettings.ContactName,
                         Email = swaggerSettings.ContactEmail,
                         Url = swaggerSettings.ContactUrl
                     };
-                    d.Info.License = new OpenApiLicense
+                    doc.Info.License = new OpenApiLicense
                     {
                         Name = swaggerSettings.LicenseName,
                         Url = swaggerSettings.LicenseUrl
                     };
                 };
 
-                document.AddSecurity(JwtBearerDefaults.AuthenticationScheme, Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                document.AddSecurity(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
                     Description = "Enter your Bearer token to attach it as a header on your requests",
                     In = OpenApiSecurityApiKeyLocation.Header,
-                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Type = OpenApiSecuritySchemeType.Http,
+                    Scheme = JwtBearerDefaults.AuthenticationScheme,
                     BearerFormat = "JWT",
                 });
 
-                document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor(JwtBearerDefaults.AuthenticationScheme));
+                document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor());
                 document.OperationProcessors.Add(new SwaggerGlobalAuthProcessor());
                 document.OperationProcessors.Add(new SwaggerHeaderAttributeProcessor());
             });
@@ -224,11 +236,12 @@ namespace Infrastructure
         internal static IApplicationBuilder UseOpenApiDocumentation(this IApplicationBuilder app)
         {
             app.UseOpenApi();
-            app.UseSwaggerUi(settings =>
+            app.UseSwaggerUi(configure =>
             {
-                settings.DefaultModelExpandDepth = -1;
-                settings.DocExpansion = "none";
-                settings.TagsSorter = "alpha";
+                configure.DefaultModelExpandDepth = 0;
+                configure.DefaultModelsExpandDepth = 0;
+                configure.TagsSorter = "alpha";
+                configure.DocExpansion = "list";
             });
             return app;
         }

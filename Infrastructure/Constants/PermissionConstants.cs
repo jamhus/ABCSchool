@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace Infrastructure.Constants
+﻿namespace Infrastructure.Constants
 {
     public static class SchoolAction
     {
@@ -8,6 +6,7 @@ namespace Infrastructure.Constants
         public const string Create = nameof(Create);
         public const string Delete = nameof(Delete);
         public const string Update = nameof(Update);
+        public const string RefreshToken = nameof(RefreshToken);
         public const string UpgrateSubscription = nameof(UpgrateSubscription);
     }
 
@@ -15,6 +14,7 @@ namespace Infrastructure.Constants
     {
         public const string Users = nameof(Users);
         public const string Roles = nameof(Roles);
+        public const string Tokens = nameof(Tokens);
         public const string Tenants = nameof(Tenants);
         public const string Schools = nameof(Schools);
         public const string UserRoles = nameof(UserRoles);
@@ -43,6 +43,7 @@ namespace Infrastructure.Constants
             new SchoolPermission(SchoolAction.Create, SchoolFeature.Roles, "SystemAccess", "Create Roles"),
             new SchoolPermission(SchoolAction.Update, SchoolFeature.Roles, "SystemAccess", "Update Roles"),
             new SchoolPermission(SchoolAction.Delete, SchoolFeature.Roles, "SystemAccess", "Delete Roles"),
+            new SchoolPermission(SchoolAction.RefreshToken, SchoolFeature.Tokens, "SystemAccess", "Generate Refresh Token", IsBasic: true),
             
             new SchoolPermission(SchoolAction.Read, SchoolFeature.RoleClaims, "SystemAccess", "Delete RoleClaims/Permissions"),
             new SchoolPermission(SchoolAction.Update, SchoolFeature.RoleClaims, "SystemAccess", "Delete RoleClaims/Permissions"),
@@ -51,6 +52,7 @@ namespace Infrastructure.Constants
             new SchoolPermission(SchoolAction.Create, SchoolFeature.Schools, "Academics", "Create Schools"),
             new SchoolPermission(SchoolAction.Update, SchoolFeature.Schools, "Academics", "Update Schools"),
             new SchoolPermission(SchoolAction.Delete, SchoolFeature.Schools, "Academics", "Delete Schools"),
+
 
             new SchoolPermission(SchoolAction.Read, SchoolFeature.Tenants, "Tenancy", "Read Tenants", IsRoot: true),
             new SchoolPermission(SchoolAction.Create, SchoolFeature.Tenants, "Tenancy", "Create Tenants", IsRoot: true),
