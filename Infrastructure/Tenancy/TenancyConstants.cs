@@ -7,6 +7,8 @@
         {
             public const string Id = "root";
             public const string Name = "Root";
+            public const string FirstName = "Christopher";
+            public const string LastName = "Nolan";
             public const string Email = "admin.root@abcshool.com";
         }
     }

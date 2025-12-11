@@ -1,5 +1,6 @@
 ﻿using Application;
 using Application.Features.Identity.Tokens;
+using Application.Features.Tenancy;
 using Application.Wrappers;
 using Finbuckle.MultiTenant;
 using Infrastructure.Constants;
@@ -44,6 +45,7 @@ namespace Infrastructure
                         .UseSqlServer(config.GetConnectionString("DefaultConnection")))
                     .AddTransient<ITenantDbSeeder, TenantDbSeeder>()
                     .AddTransient<ApplicationDbSeeder>()
+                    .AddTransient<ITenantService,TenantService>()
                     .AddIdentityService()
                     .AddPermissions()
                     .AddOpenApiDocumentation(config);

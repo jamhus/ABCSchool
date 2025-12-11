@@ -1,11 +1,11 @@
 ﻿using Finbuckle.MultiTenant.Abstractions;
-using Infrastructure.Contexts;
+using Infrastructure.Constants;
 using Infrastructure.Identity.Models;
 using Infrastructure.Tenancy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Constants
+namespace Infrastructure.Contexts
 {
     public class ApplicationDbSeeder
     {
@@ -27,7 +27,7 @@ namespace Infrastructure.Constants
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task SeedAsync(CancellationToken cancellationToken = default)
+        public async Task InitializeDatabaseAsync(CancellationToken cancellationToken = default)
         {
             if (_applicationDbContext.Database.GetMigrations().Any())
             {
@@ -123,9 +123,9 @@ namespace Infrastructure.Constants
                 incomingUser = new ApplicationUser
                 {
                     IsActive = true,
-                    LastName = "Nolan",
+                    LastName = _tenantContextAccessor.MultiTenantContext.TenantInfo.LastName,
                     EmailConfirmed = true,
-                    FirstName = "Christopher",
+                    FirstName = _tenantContextAccessor.MultiTenantContext.TenantInfo.FirstName,
                     PhoneNumberConfirmed = true,
                     Email = _tenantContextAccessor.MultiTenantContext.TenantInfo.Email,
                     UserName = _tenantContextAccessor.MultiTenantContext.TenantInfo.Email,
@@ -145,6 +145,5 @@ namespace Infrastructure.Constants
 
         }
         #endregion
-
     }
 }

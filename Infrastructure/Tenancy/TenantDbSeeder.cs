@@ -1,7 +1,7 @@
 ﻿
 using Finbuckle.MultiTenant;
 using Finbuckle.MultiTenant.Abstractions;
-using Infrastructure.Constants;
+using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -39,7 +39,8 @@ namespace Infrastructure.Tenancy
                     Name = TenancyConstants.Root.Name,
                     Email = TenancyConstants.Root.Email,
                     Identifier = TenancyConstants.Root.Id,
-                    FullName = "Christopher Nolan",
+                    FirstName = TenancyConstants.Root.FirstName,
+                    LastName = TenancyConstants.Root.LastName,
                     IsActive = true,
                     ValidTo = DateTime.UtcNow.AddYears(100),
                 };
@@ -60,7 +61,7 @@ namespace Infrastructure.Tenancy
 
             await scope.ServiceProvider
                 .GetRequiredService<ApplicationDbSeeder>()
-                .SeedAsync(ct);
+                .InitializeDatabaseAsync(ct);
         }
     }
 }
