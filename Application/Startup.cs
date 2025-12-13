@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using Application.Pipelines;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -12,6 +14,7 @@ namespace Application
 
             return services
                 .AddValidatorsFromAssembly(assembly)
+                .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehaviour<,>))
                 .AddMediatR(cfg =>
                 {
                     cfg.RegisterServicesFromAssembly(assembly);

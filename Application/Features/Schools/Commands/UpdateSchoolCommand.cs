@@ -1,10 +1,11 @@
-﻿using Application.Wrappers;
+﻿using Application.Pipelines;
+using Application.Wrappers;
 using FluentValidation;
 using MediatR;
 
 namespace Application.Features.Schools.Commands
 {
-    public class UpdateSchoolCommand : IRequest<IResponseWrapper>
+    public class UpdateSchoolCommand : IRequest<IResponseWrapper>, IValidateMe
     {
         public UpdateSchoolRequest UpdateSchool { get; set; }
     }
@@ -27,9 +28,9 @@ namespace Application.Features.Schools.Commands
         }
     }
 
-    internal class UpdateSchoolCommandValidator : AbstractValidator<UpdateSchoolCommand>
+    public class UpdateSchoolCommandValidator : AbstractValidator<UpdateSchoolCommand>
     {
-        internal UpdateSchoolCommandValidator(ISchoolService schoolService)
+        public UpdateSchoolCommandValidator(ISchoolService schoolService)
         {
             RuleFor(c => c.UpdateSchool)
                 .SetValidator(new UpdateSchoolRequestValidator(schoolService));

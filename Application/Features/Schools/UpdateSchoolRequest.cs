@@ -8,11 +8,11 @@ namespace Application.Features.Schools
         public int Id { get; set; }
     }
 
-    internal class UpdateSchoolRequestValidator : AbstractValidator<UpdateSchoolRequest>
+    public class UpdateSchoolRequestValidator : AbstractValidator<UpdateSchoolRequest>
     {
         private readonly ISchoolService _schoolService;
 
-        internal UpdateSchoolRequestValidator(ISchoolService schoolService)
+        public UpdateSchoolRequestValidator(ISchoolService schoolService)
         {
             RuleFor(r => r.Id)
                 .NotEmpty()

@@ -1,4 +1,5 @@
-﻿using Application.Wrappers;
+﻿using Application.Pipelines;
+using Application.Wrappers;
 using Domain.Entities;
 using FluentValidation;
 using Mapster;
@@ -6,7 +7,7 @@ using MediatR;
 
 namespace Application.Features.Schools.Commands
 {
-    public class CreateSchoolCommand : IRequest<IResponseWrapper>
+    public class CreateSchoolCommand : IRequest<IResponseWrapper>, IValidateMe
     {
         public CreateSchoolRequest CreateSchool { get; set; }
     }
@@ -23,7 +24,7 @@ namespace Application.Features.Schools.Commands
         }
     }
 
-    internal class CreateSchoolCommandValidator : AbstractValidator<CreateSchoolCommand>
+    public class CreateSchoolCommandValidator : AbstractValidator<CreateSchoolCommand>
     {
         public CreateSchoolCommandValidator()
         {

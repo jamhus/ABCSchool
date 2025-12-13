@@ -8,9 +8,9 @@ namespace Application.Features.Schools
         public DateTime EstablishedDate { get; set; }
     }
 
-    internal class CreateSchoolRequestValidator : AbstractValidator<CreateSchoolRequest>
+    public class CreateSchoolRequestValidator : AbstractValidator<CreateSchoolRequest>
     {
-        internal CreateSchoolRequestValidator()
+        public CreateSchoolRequestValidator()
         {
             RuleFor(r => r.Name)
                 .NotEmpty()
