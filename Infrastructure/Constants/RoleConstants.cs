@@ -12,5 +12,6 @@
         };
         
         public static bool IsDefaultRole(string roleName) => DefaultRoles.Contains(roleName);
+        public static bool IsAdmin(string roleName) => roleName.Equals(RoleConstants.Admin);
     }
 }

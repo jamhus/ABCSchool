@@ -1,11 +1,14 @@
 ﻿using Application;
+using Application.Features.Identity.Roles;
 using Application.Features.Identity.Tokens;
+using Application.Features.Identity.Users;
 using Application.Features.Schools;
 using Application.Features.Tenancy;
 using Application.Wrappers;
 using Finbuckle.MultiTenant;
 using Infrastructure.Constants;
 using Infrastructure.Contexts;
+using Infrastructure.Identity;
 using Infrastructure.Identity.Auth;
 using Infrastructure.Identity.Models;
 using Infrastructure.Identity.Tokens;
@@ -69,7 +72,11 @@ namespace Infrastructure
                 }).AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
                 .Services
-                .AddScoped<ITokenService, TokenService>();
+                .AddScoped<ITokenService, TokenService>()
+                .AddScoped<IUserService, UserService>()
+                .AddScoped<ICurrentUserService, CurrentUserService>()
+                .AddScoped<IRoleService, RoleService>()
+                .AddScoped<CurrentUserMiddleware>();
         }
 
         public static async Task InitializeDatabasesAsync(this IServiceProvider serviceProvider, CancellationToken ct = default)
@@ -235,7 +242,8 @@ namespace Infrastructure
                 .UseAuthentication()
                 .UseMultiTenant()
                 .UseAuthorization()
-                .UseOpenApiDocumentation();
+                .UseOpenApiDocumentation()
+                .UseMiddleware<CurrentUserMiddleware>();
         }
 
         internal static IApplicationBuilder UseOpenApiDocumentation(this IApplicationBuilder app)
