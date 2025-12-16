@@ -1,13 +1,14 @@
 ﻿using Application.Exceptions;
 using Application.Features.Identity.Users;
 using Finbuckle.MultiTenant.Abstractions;
-using Infrastructure.Constants;
 using Infrastructure.Contexts;
 using Infrastructure.Identity.Models;
 using Infrastructure.Tenancy;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Shared.Constants;
+using Shared.RequestModels.Identity.Users;
 
 namespace Infrastructure.Identity
 {

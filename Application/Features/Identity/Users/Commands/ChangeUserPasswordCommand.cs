@@ -1,5 +1,6 @@
-﻿using Application.Wrappers;
+﻿using Shared.Wrappers;
 using MediatR;
+using Shared.RequestModels.Identity.Users;
 
 namespace Application.Features.Identity.Users.Commands
 {

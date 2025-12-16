@@ -1,5 +1,5 @@
 ﻿using Application.Exceptions;
-using Application.Wrappers;
+using Shared.Wrappers;
 using System;
 using System.Net;
 using System.Text.Json;

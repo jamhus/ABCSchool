@@ -2,12 +2,13 @@
 using Application.Exceptions;
 using Application.Features.Identity.Tokens;
 using Finbuckle.MultiTenant.Abstractions;
-using Infrastructure.Constants;
 using Infrastructure.Identity.Models;
 using Infrastructure.Tenancy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Constants;
+using Shared.RequestModels.Identity.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;

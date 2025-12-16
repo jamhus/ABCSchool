@@ -1,9 +1,10 @@
 ﻿using Application.Features.Schools;
 using Application.Features.Schools.Commands;
 using Application.Features.Schools.Queries;
-using Infrastructure.Constants;
 using Infrastructure.Identity.Auth;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Constants;
+using Shared.RequestModels.Schools;
 
 namespace WebApi.Controllers
 {

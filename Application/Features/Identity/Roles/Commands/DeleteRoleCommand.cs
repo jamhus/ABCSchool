@@ -1,6 +1,6 @@
 ﻿using Application.Features.Identity.Roles;
-using Application.Wrappers;
 using MediatR;
+using Shared.Wrappers;
 
 public class DeleteRoleCommand : IRequest<IResponseWrapper>
 {

@@ -1,6 +1,6 @@
-﻿using Infrastructure.Constants;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
+using Shared.Constants;
 
 namespace Infrastructure.Identity.Auth
 {

@@ -1,4 +1,4 @@
-﻿using Application.Wrappers;
+﻿using Shared.Wrappers;
 using MediatR;
 
 namespace Application.Features.Identity.Users.Commands

@@ -1,4 +1,6 @@
-﻿namespace Application.Features.Tenancy
+﻿using Shared.RequestModels.Tenancy;
+
+namespace Application.Features.Tenancy
 {
     public interface ITenantService
     {

@@ -1,6 +1,6 @@
-﻿using Application.Features.Identity.Roles;
-using Application.Wrappers;
-using MediatR;
+﻿using MediatR;
+using Shared.RequestModels.Identity.Roles;
+using Shared.Wrappers;
 
 namespace Application.Features.Identity.Roles.Commands
 {

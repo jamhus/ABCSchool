@@ -1,9 +1,10 @@
 ﻿using Application.Features.Tenancy;
 using Application.Features.Tenancy.Commands;
 using Application.Features.Tenancy.Queries;
-using Infrastructure.Constants;
 using Infrastructure.Identity.Auth;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Constants;
+using Shared.RequestModels.Tenancy;
 
 namespace WebApi.Controllers
 {

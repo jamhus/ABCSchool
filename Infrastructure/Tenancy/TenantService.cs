@@ -4,6 +4,7 @@ using Finbuckle.MultiTenant.Abstractions;
 using Infrastructure.Contexts;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.RequestModels.Tenancy;
 
 namespace Infrastructure.Tenancy
 {

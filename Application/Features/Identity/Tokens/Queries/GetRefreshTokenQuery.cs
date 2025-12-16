@@ -1,5 +1,6 @@
-﻿using Application.Wrappers;
+﻿using Shared.Wrappers;
 using MediatR;
+using Shared.RequestModels.Identity.Tokens;
 
 namespace Application.Features.Identity.Tokens.Queries
 {

@@ -1,4 +1,6 @@
-﻿namespace Application.Features.Identity.Roles
+﻿using Shared.RequestModels.Identity.Roles;
+
+namespace Application.Features.Identity.Roles
 {
     public interface IRoleService
     {

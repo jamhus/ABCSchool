@@ -1,5 +1,5 @@
-﻿using Infrastructure.Constants;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Shared.Constants;
 
 namespace Infrastructure.Identity.Auth
 {

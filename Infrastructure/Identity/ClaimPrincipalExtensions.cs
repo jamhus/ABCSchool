@@ -1,4 +1,4 @@
-﻿using Infrastructure.Constants;
+﻿using Shared.Constants;
 using System.Security.Claims;
 
 namespace Infrastructure.Identity

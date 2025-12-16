@@ -1,4 +1,6 @@
-﻿namespace Application.Features.Identity.Users
+﻿using Shared.RequestModels.Identity.Users;
+
+namespace Application.Features.Identity.Users
 {
     public interface IUserService
     {

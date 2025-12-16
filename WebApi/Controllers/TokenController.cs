@@ -1,11 +1,12 @@
 ﻿using Application.Features.Identity.Tokens;
 using Application.Features.Identity.Tokens.Queries;
-using Infrastructure.Constants;
 using Infrastructure.Identity.Auth;
 using Infrastructure.OpenApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
+using Shared.Constants;
+using Shared.RequestModels.Identity.Tokens;
 
 namespace WebApi.Controllers
 {

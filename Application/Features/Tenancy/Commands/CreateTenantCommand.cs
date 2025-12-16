@@ -1,5 +1,6 @@
-﻿using Application.Wrappers;
+﻿using Shared.Wrappers;
 using MediatR;
+using Shared.RequestModels.Tenancy;
 
 namespace Application.Features.Tenancy.Commands
 {

@@ -1,6 +1,7 @@
 ﻿using Application.Features.Identity.Roles;
-using Application.Wrappers;
+using Shared.Wrappers;
 using MediatR;
+using Shared.RequestModels.Identity.Roles;
 
 public class UpdateRoleCommand : IRequest<IResponseWrapper>
 {

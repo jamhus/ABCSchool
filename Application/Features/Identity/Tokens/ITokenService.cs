@@ -1,4 +1,6 @@
-﻿namespace Application.Features.Identity.Tokens
+﻿using Shared.RequestModels.Identity.Tokens;
+
+namespace Application.Features.Identity.Tokens
 {
     public interface ITokenService
     {

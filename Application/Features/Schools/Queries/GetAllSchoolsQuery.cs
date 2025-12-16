@@ -1,6 +1,7 @@
-﻿using Application.Wrappers;
+﻿using Shared.Wrappers;
 using Mapster;
 using MediatR;
+using Shared.RequestModels.Schools;
 
 namespace Application.Features.Schools.Queries
 {
