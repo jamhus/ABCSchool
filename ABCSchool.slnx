@@ -1,9 +1,12 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="ABCSchoolPortal/ABCSchoolPortal.csproj" Id="25e56442-9967-4fcc-a61c-2346fe7cdf1a" />
     <Project Path="Infrastructure/Infrastructure.csproj" />
     <Project Path="Shared/Shared.csproj" Id="cd0139b5-169d-4f0b-82ee-2a459d3389d2" />
     <Project Path="WebApi/WebApi.csproj" />
+  </Folder>
+  <Folder Name="/src/client/">
+    <Project Path="ABCSchoolPortal/ABCSchoolPortal.csproj" Id="25e56442-9967-4fcc-a61c-2346fe7cdf1a" />
+    <Project Path="App.Infrastructure/Portal.Infrastructure.csproj" Id="08e9c5e5-21d6-4cee-9b5a-5b99659f0e49" />
   </Folder>
   <Folder Name="/src/core/">
     <Project Path="Application/Application.csproj" />

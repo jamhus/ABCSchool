@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Shared.Constants;
 
-namespace Infrastructure.Identity.Auth
+namespace Portal.Infrastructure.Services.Auth
 {
     public class ShouldHavePermissionAttribute : AuthorizeAttribute
     {

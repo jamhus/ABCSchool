@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Shared.Constants;
+using System.Security.Claims;
 
 namespace Infrastructure.Identity.Auth
 {
@@ -6,7 +8,7 @@ namespace Infrastructure.Identity.Auth
     {
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
-            var permissionClaim = context.User.Claims.Where(c => c.Type == "permission" && c.Value == requirement.Permission);
+            var permissionClaim = context.User.Claims.Where(c => c.Type == ClaimConstants.Permission && c.Value == requirement.Permission);
 
             if (permissionClaim.Any())
             {
